@@ -1,0 +1,24 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import MainLayout from "./components/layout/MainLayout";
+import Home from "./pages/Home";
+import Scanner from "./pages/Scanner";
+import Profile from "./pages/Profile";
+import Collection from "./pages/Collection";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <MainLayout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/scanner" element={<Scanner />} />
+          <Route path="/collection" element={<Collection />} />
+          <Route path="/profile/:id" element={<Profile />} />
+        </Routes>
+      </MainLayout>
+    </BrowserRouter>
+  );
+}
+
+export default App;
+

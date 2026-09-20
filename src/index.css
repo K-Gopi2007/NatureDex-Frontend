@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #041a10;
+  --color-foreground: #e2f0e9;
+  --color-primary: #10b981;
+  --color-primary-foreground: #022c22;
+  --color-card: rgba(11, 41, 26, 0.6);
+}
+
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+}
