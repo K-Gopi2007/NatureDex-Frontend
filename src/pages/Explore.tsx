@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { fetchWithAuth } from '../services/api';
 import { Compass, Navigation } from 'lucide-react';
-import LoadingScreen from '../components/ui/LoadingScreen';
+
 
 // Custom icons
 const nearbyIcon = new L.Icon({

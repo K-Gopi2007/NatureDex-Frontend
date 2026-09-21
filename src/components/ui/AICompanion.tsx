@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Volume2, VolumeX, Sparkles } from 'lucide-react';
+import { X, Send, Volume2, VolumeX, Sparkles } from 'lucide-react';
 import { fetchWithAuth } from '../../services/api';
 
 interface Message {

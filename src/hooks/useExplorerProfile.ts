@@ -42,7 +42,7 @@ export function useExplorerProfile() {
     fetchProfile();
   }, []);
 
-  const addXP = async (amount: number, category: string, conservationStatus: string = "") => {
+  const addXP = async (_amount: number, category: string, conservationStatus: string = "") => {
     // Let backend handle XP and achievements
     try {
       const res = await fetchWithAuth('/users/me/progress/award', {

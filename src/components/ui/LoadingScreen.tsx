@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Leaf } from "lucide-react";
 
-export default function LoadingScreen() {
+export default function LoadingScreen({ message = "Analyzing" }: { message?: string }) {
   return (
     <div className="fixed inset-0 bg-background flex flex-col items-center justify-center z-50">
       <motion.div
@@ -24,7 +24,7 @@ export default function LoadingScreen() {
         transition={{ delay: 0.2 }}
         className="mt-6 text-xl font-medium text-foreground tracking-widest uppercase"
       >
-        Analyzing
+        {message}
       </motion.h2>
     </div>
   );
