@@ -1,6 +1,10 @@
-export const API_URL =
+const BASE_URL =
   import.meta.env.VITE_API_URL ||
-  "https://naturedex-api.onrender.com";
+  "https://naturedex-backend.onrender.com";
+
+export const API_URL = BASE_URL.endsWith('/api/v1')
+  ? BASE_URL
+  : `${BASE_URL.replace(/\/$/, '')}/api/v1`;
 
 export const getAuthHeaders = (): Record<string, string> => {
   const token = localStorage.getItem('access_token');
