@@ -3,6 +3,7 @@ import { ScanLine, X, Image as ImageIcon, RotateCcw, AlertCircle, ChevronRight, 
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useExplorerProfile } from "../hooks/useExplorerProfile";
+import { API_URL } from "../services/api";
 
 const Particles = () => {
   const particles = Array.from({ length: 40 }).map((_, i) => ({
@@ -137,7 +138,7 @@ export default function Scanner() {
       const formData = new FormData();
       formData.append('image', blob, 'scan.jpg');
       
-      const apiResponse = await fetch('http://127.0.0.1:8000/api/v1/identify/', {
+      const apiResponse = await fetch(`${API_URL}/identify/`, {
         method: 'POST',
         body: formData,
       });
