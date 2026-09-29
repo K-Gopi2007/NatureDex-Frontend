@@ -3,6 +3,7 @@ import { ScanLine, X, Image as ImageIcon, RotateCcw, AlertCircle, ChevronRight, 
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useExplorerProfile } from "../hooks/useExplorerProfile";
+import { useDiscoveries } from "../hooks/useDiscoveries";
 import { API_URL } from "../services/api";
 
 const Particles = () => {
@@ -45,7 +46,8 @@ export default function Scanner() {
   const streamRef = useRef<MediaStream | null>(null);
   const navigate = useNavigate();
 
-  const { addXP, recentlyUnlocked, clearRecentlyUnlocked } = useExplorerProfile();
+  const { recentlyUnlocked, clearRecentlyUnlocked } = useExplorerProfile();
+  const { saveDiscovery } = useDiscoveries();
 
   const startCamera = useCallback(async () => {
     setState('idle');
@@ -161,22 +163,30 @@ export default function Scanner() {
         category: data.category || "Unknown",
         secondarySpecies: data.secondary_species || []
       };
-      
-      // Auto-save the discovery
-      const existing = localStorage.getItem('naturedex_discoveries');
-      const discoveries = existing ? JSON.parse(existing) : [];
-      discoveries.unshift({
-        id: newResult.id,
+
+      let lat = 0.0;
+      let lng = 0.0;
+      try {
+        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+        });
+        lat = position.coords.latitude;
+        lng = position.coords.longitude;
+      } catch (e) {
+        console.warn("Could not get location:", e);
+      }
+
+      await saveDiscovery({
         name: newResult.name,
         scientificName: newResult.scientificName,
         category: newResult.category,
         imageUrl: imageSrc,
-        discoveredAt: new Date().toISOString()
+        description: newResult.description,
+        conservation_status: data.conservation_status,
+        location_lat: lat,
+        location_lng: lng
       });
-      localStorage.setItem('naturedex_discoveries', JSON.stringify(discoveries));
-      
-      // Add XP and trigger progression for the discovery
-      addXP(100, newResult.category, data.conservation_status || "");
+      // The backend /discoveries POST automatically triggers XP now!
       
       // Wait a tiny bit for the 100% to register visually before showing result
       setTimeout(() => {

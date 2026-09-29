@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Send, Volume2, VolumeX, Sparkles } from 'lucide-react';
 import { fetchWithAuth } from '../../services/api';
+import { useDiscoveries } from '../../hooks/useDiscoveries';
 
 interface Message {
   id: string;
@@ -9,6 +10,7 @@ interface Message {
 }
 
 export default function AICompanion() {
+  const { discoveries } = useDiscoveries();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { id: '1', sender: 'ai', text: 'Hello! I am your NatureDex Companion. Ask me anything about nature or specific species!' }
@@ -82,12 +84,8 @@ export default function AICompanion() {
     try {
       // Find context if available
       let speciesContext = undefined;
-      const existing = localStorage.getItem('naturedex_discoveries');
-      if (existing) {
-        const discoveries = JSON.parse(existing);
-        if (discoveries.length > 0) {
-           speciesContext = discoveries[0].name;
-        }
+      if (discoveries && discoveries.length > 0) {
+         speciesContext = discoveries[0].name;
       }
 
       const res = await fetchWithAuth('/companion/ask', {

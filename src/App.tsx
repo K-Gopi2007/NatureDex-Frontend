@@ -10,6 +10,7 @@ import UserProfile from "./pages/UserProfile";
 import MapPage from "./pages/Map";
 import ExplorePage from "./pages/Explore";
 import Compare from "./pages/Compare";
+import Contributions from "./pages/Contributions";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import { AuthProvider } from "./store/AuthContext";
 
@@ -69,6 +70,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/contributions" 
+              element={
+                <ProtectedRoute>
+                  <Contributions />
                 </ProtectedRoute>
               } 
             />

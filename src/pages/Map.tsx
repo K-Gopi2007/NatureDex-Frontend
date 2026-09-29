@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import MarkerClusterGroup from 'react-leaflet-cluster';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { fetchWithAuth } from '../services/api';
@@ -74,23 +73,25 @@ const MapPage: React.FC = () => {
             url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           />
           
-          <MarkerClusterGroup>
+          <>
             {discoveries.map((discovery) => (
-              <Marker 
-                key={discovery.id} 
-                position={[discovery.location_lat, discovery.location_lng]}
-                icon={discoveryIcon}
-              >
-                <Popup className="scientific-popup">
-                  <div className="p-2 text-center">
-                    <strong className="text-lg text-emerald-700 block mb-1">{discovery.species_name}</strong>
-                    <span className="text-xs text-gray-500 uppercase tracking-wider block mb-2">Recorded</span>
-                    <span className="text-sm">{new Date(discovery.discovered_at).toLocaleDateString()}</span>
-                  </div>
-                </Popup>
-              </Marker>
+              discovery.location_lat != null && discovery.location_lng != null ? (
+                <Marker 
+                  key={discovery.id} 
+                  position={[discovery.location_lat, discovery.location_lng]}
+                  icon={discoveryIcon}
+                >
+                  <Popup className="scientific-popup">
+                    <div className="p-2 text-center">
+                      <strong className="text-lg text-emerald-700 block mb-1">{discovery.species_name}</strong>
+                      <span className="text-xs text-gray-500 uppercase tracking-wider block mb-2">Recorded</span>
+                      <span className="text-sm">{new Date(discovery.discovered_at).toLocaleDateString()}</span>
+                    </div>
+                  </Popup>
+                </Marker>
+              ) : null
             ))}
-          </MarkerClusterGroup>
+          </>
         </MapContainer>
       </div>
     </div>

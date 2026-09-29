@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { fetchWithAuth } from '../services/api';
 
 export interface Discovery {
   id: string;
@@ -13,30 +14,48 @@ export function useDiscoveries() {
   const [discoveries, setDiscoveries] = useState<Discovery[]>([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('naturedex_discoveries');
-    if (saved) {
+    const fetchDiscoveries = async () => {
       try {
-        setDiscoveries(JSON.parse(saved));
+        const response = await fetchWithAuth('/discoveries/');
+        if (response.ok) {
+          const data = await response.json();
+          setDiscoveries(data);
+        }
       } catch (e) {
-        console.error("Failed to parse discoveries", e);
+        console.error("Failed to fetch discoveries from backend", e);
       }
-    }
+    };
+    fetchDiscoveries();
   }, []);
 
-  const saveDiscovery = (discovery: Omit<Discovery, 'id' | 'discoveredAt'>) => {
-    const newDiscovery: Discovery = {
-      ...discovery,
-      id: Math.random().toString(36).substring(7),
-      discoveredAt: new Date().toISOString()
-    };
-    
-    setDiscoveries(prev => {
-      const updated = [newDiscovery, ...prev];
-      localStorage.setItem('naturedex_discoveries', JSON.stringify(updated));
-      return updated;
-    });
-    
-    return newDiscovery;
+  const saveDiscovery = async (discovery: any) => {
+    try {
+      const response = await fetchWithAuth('/discoveries/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          common_name: discovery.name,
+          scientific_name: discovery.scientificName,
+          category: discovery.category,
+          description: discovery.description,
+          conservation_status: discovery.conservation_status,
+          location_lat: discovery.location_lat,
+          location_lng: discovery.location_lng
+        })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        // The image URL is local right now, we can inject it back for the UI
+        data.imageUrl = discovery.imageUrl;
+        setDiscoveries(prev => [data, ...prev]);
+        return data;
+      }
+    } catch (e) {
+        console.error("Failed to save discovery to backend", e);
+    }
+    return null;
   };
 
   return { discoveries, saveDiscovery };

@@ -1,4 +1,4 @@
-import { Leaf, LogOut, Map as MapIcon, Compass, Scale } from "lucide-react";
+import { Leaf, LogOut, Map as MapIcon, Compass, Scale, Users } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../store/AuthContext";
 
@@ -31,6 +31,9 @@ export default function Navbar() {
               </Link>
               <Link to="/compare" className="text-gray-400 hover:text-emerald-400 transition" title="Compare Species">
                 <Scale size={20} />
+              </Link>
+              <Link to="/contributions" className="text-gray-400 hover:text-blue-400 transition" title="Citizen Science">
+                <Users size={20} />
               </Link>
               <Link to="/user-profile" className="w-8 h-8 rounded-full bg-emerald-900 border border-emerald-500 overflow-hidden flex items-center justify-center ml-2">
                 <img src={user.profile_picture || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`} alt="User" className="w-full h-full" />

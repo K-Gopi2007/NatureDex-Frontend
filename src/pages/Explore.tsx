@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-leaflet';
-import MarkerClusterGroup from 'react-leaflet-cluster';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { fetchWithAuth } from '../services/api';
@@ -128,7 +127,7 @@ const ExplorePage: React.FC = () => {
             </>
           )}
 
-          <MarkerClusterGroup>
+          <>
             {nearby.map((species) => (
               <Marker 
                 key={species.species_id} 
@@ -143,7 +142,7 @@ const ExplorePage: React.FC = () => {
                 </Popup>
               </Marker>
             ))}
-          </MarkerClusterGroup>
+          </>
         </MapContainer>
       </div>
     </div>
