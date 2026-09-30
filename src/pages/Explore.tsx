@@ -64,10 +64,14 @@ const ExplorePage: React.FC = () => {
           const res = await fetchWithAuth(`/map/nearby?lat=${lat}&lng=${lng}&radius=50.0`);
           if (res.ok) {
             const data = await res.json();
-            setNearby(data);
+            const safeData = Array.isArray(data) ? data : [];
+            setNearby(safeData);
+          } else {
+            setNearby([]);
           }
         } catch (err) {
           console.error(err);
+          setNearby([]);
         } finally {
           setLoading(false);
         }
@@ -83,6 +87,8 @@ const ExplorePage: React.FC = () => {
     locateUser();
   }, []);
 
+  const safeNearby = Array.isArray(nearby) ? nearby : [];
+
   return (
     <div className="min-h-screen bg-black pt-16 flex flex-col relative text-white">
       <div className="absolute top-20 left-6 z-[1000] bg-black/60 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-lg max-w-xs w-full">
@@ -94,7 +100,7 @@ const ExplorePage: React.FC = () => {
         {error && <p className="text-sm text-red-400">{error}</p>}
         {!loading && !error && (
           <p className="text-sm text-gray-400">
-            Found {nearby.length} species in your vicinity.
+            Found {safeNearby.length} species in your vicinity.
           </p>
         )}
         <button 
@@ -128,7 +134,7 @@ const ExplorePage: React.FC = () => {
           )}
 
           <>
-            {nearby.map((species) => (
+            {safeNearby.map((species) => (
               <Marker 
                 key={species.species_id} 
                 position={[species.location_lat, species.location_lng]}

@@ -19,10 +19,14 @@ export function useDiscoveries() {
         const response = await fetchWithAuth('/discoveries/');
         if (response.ok) {
           const data = await response.json();
-          setDiscoveries(data);
+          const safeData = Array.isArray(data) ? data : [];
+          setDiscoveries(safeData);
+        } else {
+          setDiscoveries([]);
         }
       } catch (e) {
         console.error("Failed to fetch discoveries from backend", e);
+        setDiscoveries([]);
       }
     };
     fetchDiscoveries();

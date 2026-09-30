@@ -35,16 +35,22 @@ const MapPage: React.FC = () => {
         const res = await fetchWithAuth('/map/discoveries');
         if (res.ok) {
           const data = await res.json();
-          setDiscoveries(data);
+          const safeData = Array.isArray(data) ? data : [];
+          setDiscoveries(safeData);
+        } else {
+          setDiscoveries([]);
         }
       } catch (error) {
         console.error("Failed to load map data", error);
+        setDiscoveries([]);
       } finally {
         setLoading(false);
       }
     };
     loadMapData();
   }, []);
+
+  const safeDiscoveries = Array.isArray(discoveries) ? discoveries : [];
 
   if (loading) return <LoadingScreen message="Loading world map..." />;
 
@@ -62,7 +68,7 @@ const MapPage: React.FC = () => {
       
       <div className="flex-1 w-full h-[calc(100vh-4rem)] z-0">
         <MapContainer 
-          center={discoveries.length > 0 ? [discoveries[0].location_lat, discoveries[0].location_lng] : defaultCenter} 
+          center={safeDiscoveries.length > 0 ? [safeDiscoveries[0].location_lat, safeDiscoveries[0].location_lng] : defaultCenter} 
           zoom={3} 
           style={{ height: '100%', width: '100%', background: '#0a0a0a' }}
           zoomControl={false}
@@ -74,7 +80,7 @@ const MapPage: React.FC = () => {
           />
           
           <>
-            {discoveries.map((discovery) => (
+            {safeDiscoveries.map((discovery) => (
               discovery.location_lat != null && discovery.location_lng != null ? (
                 <Marker 
                   key={discovery.id} 

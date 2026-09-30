@@ -29,7 +29,12 @@ export function useExplorerProfile() {
       const res = await fetchWithAuth('/users/me/progress');
       if (res.ok) {
         const data = await res.json();
-        setProfile(data);
+        if (data && typeof data === 'object' && Array.isArray(data.achievements)) {
+          setProfile(data);
+        } else {
+          // If the API returns something unexpected (like 401 parsed as JSON without achievements)
+          setProfile(prev => ({ ...prev }));
+        }
       }
     } catch (e) {
       console.error("Failed to fetch profile", e);
