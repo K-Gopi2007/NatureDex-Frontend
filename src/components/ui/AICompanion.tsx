@@ -39,6 +39,7 @@ export default function AICompanion() {
       try {
         const res = await fetchWithAuth('/companion/celebrate', {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ species_name: speciesName })
         });
         if (res.ok) {
@@ -90,6 +91,7 @@ export default function AICompanion() {
 
       const res = await fetchWithAuth('/companion/ask', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
            question: userText,
            species_context: speciesContext

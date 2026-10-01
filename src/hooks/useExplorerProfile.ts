@@ -52,6 +52,7 @@ export function useExplorerProfile() {
     try {
       const res = await fetchWithAuth('/users/me/progress/award', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ species_category: category, conservation_status: conservationStatus })
       });
       
